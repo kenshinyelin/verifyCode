@@ -1,0 +1,33 @@
+(async () => {
+const puppeteer = require('puppeteer')
+const fs = require('fs')
+const browser = await puppeteer.launch({
+    headless: false,
+});
+
+const page = await browser.newPage();
+await page.goto('https://www.ultra88.com/');
+await page.waitForSelector('#txtUserName')
+await page.waitForSelector('#txtPassWord')
+
+await page.focus('#txtUserName')
+await page.keyboard.type('SMWSub111')
+
+await page.focus('#txtPassWord')
+await page.keyboard.type('111333aa@')
+
+await page.$eval( '#btnLogin', form => form.click() );
+await page.waitForNavigation();
+
+await page.waitForSelector('#profile');
+
+await page.goto('https://mb.ultra88.com/site-reports/enteredresult/master')
+
+// console.log(await page.content());
+// await page.screenshot({path: 'screenshot.png'});
+const html = await page.content();
+fs.writeFileSync('./output.html', html);
+
+
+await browser.close();
+})()
